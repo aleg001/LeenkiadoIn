@@ -4,6 +4,7 @@
       ref="registerFrom"
       class="bg-white shadow-md p-[2rem] rounded-lg w-full"
       @submit.prevent="submitMode"
+      @click="createUser"
     >
       <div class="form-field w-full" v-if="mode === '2'">
         <input
@@ -85,6 +86,7 @@
 </template>
 <script>
 import { Validation } from '../services/_formValidation.js'
+import axios from 'axios'
 
 export default {
   data() {
@@ -99,10 +101,6 @@ export default {
           isVal: true,
           errorMessage: null,
         },
-      },
-      photoUrl: {
-        name: 'photoUrl',
-        val: '',
       },
       password: {
         name: 'password',
@@ -162,7 +160,6 @@ export default {
         // mode =2 ==> Entering fullname
         this.userInfo.set('email', this.email.val)
         this.userInfo.set('password', this.password.val)
-        this.userInfo.set('photoUrl', this.photoUrl.val)
         this.validationHandler(this.userInfo)
         if (this.formIsValid) {
           this.mode = '2'
@@ -176,13 +173,6 @@ export default {
       this.validationHandler(dataEntry)
 
       if (this.formIsValid) {
-        await this.$store.dispatch('SignUp', dataEntry)
-        const userId = this.$store.getters.userId
-        this.$store.dispatch('uploadImage', {
-          file: this.photoUrl.val,
-          userId,
-        })
-
         this.$router.push('/feed')
       } else {
         this.$refs.registerFrom.reset()
@@ -196,6 +186,19 @@ export default {
         this[`${item.key}`].valid.errorMessage = item.errorMessage
       })
     },
+    async createUser() {
+      try {
+        const user = {
+          email: this.email,
+          password: this.password,
+          fullname: this.fullname
+        }
+        const res = await axios.post('http://localhost:3001/api/users', user)
+        console.log(res.data)
+      } catch (err) {
+        console.error(err)
+      }
+    }
   },
   computed: {
     displayType() {
