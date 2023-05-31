@@ -1,6 +1,17 @@
 <template>
   <div class="feed justify-center">
-    <v-card v-for="post in posts" :key="post.id" class="post-card mb-4 ">
+    <div class="post-card">
+      <div class="create-post">
+        <textarea
+          v-model="newPost.content"
+          placeholder="¿Qué tenés en la mente chavo?"
+          class="create-post-text"
+        ></textarea>
+      </div>
+      <button @click="addPost" class="create-post-btn mt-5">Publicalo</button>
+    </div>
+
+    <v-card v-for="post in posts" :key="post.id" class="post-card mb-4">
       <v-card-text>
         <div class="post-header">
           <v-avatar class="post-avatar">
@@ -34,13 +45,21 @@
 <script>
 import TheNav from '../components/layouts/TheNav.vue'
 export default {
-  mounted() {
-    const properties = JSON.parse(this.$route.query.properties);
-    console.log(properties);
-  },
   data() {
     return {
+      dialog: false,
+      newPostContent: '',
       TheNav,
+      newPost: {
+        id: null,
+        author: 'User Name',
+        authorImage: 'https://example.com/user-avatar.jpg',
+        timestamp: 'Just now',
+        content: '',
+        likes: 0,
+        comments: 0,
+        shares: 0,
+      },
       posts: [
         {
           id: 1,
@@ -74,6 +93,15 @@ export default {
         },
       ],
     }
+  },
+  methods: {
+    addPost() {
+      if (this.newPost.content !== '') {
+        this.newPost.id = this.posts.length + 1
+        this.posts.unshift(Object.assign({}, this.newPost))
+        this.newPost.content = ''
+      }
+    },
   },
 }
 </script>
@@ -149,5 +177,36 @@ export default {
 
 .post-engagement-count {
   font-size: 14px;
+}
+
+.post-card .v-textarea {
+  margin-bottom: 16px;
+}
+
+.create-post {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.create-post-text {
+  flex-grow: 1;
+  margin-right: 16px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.create-post-btn {
+  padding: 8px 16px;
+  color: #fff;
+  background-color: #0a66c2;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.create-post-btn:hover {
+  background-color: #004182;
 }
 </style>
