@@ -45,6 +45,10 @@
 <script>
 import TheNav from '../components/layouts/TheNav.vue'
 export default {
+  mounted() {
+    const properties = this.$store.state.properties;
+    console.log(properties);
+  },
   data() {
     return {
       dialog: false,

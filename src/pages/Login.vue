@@ -121,8 +121,9 @@ export default {
       const resultado = await this.getUser()
       if(resultado.length !== 0){
         const properties = resultado[0]._fields[0]
+        this.$store.commit('setProperties', properties);
         console.log(properties);
-        this.$router.push({ path: "/feed", query: { properties: JSON.stringify(properties) } });
+        this.$router.push("/feed");
       }
       else{
         // Mostrar un error
