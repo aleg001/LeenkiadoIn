@@ -121,7 +121,7 @@ export default {
       const resultado = await this.getUser()
       console.log(resultado)
       if(resultado !== 0){
-        this.$router.push("/Feed");
+        this.$router.push("/feed");
       }
       else{
         // Mostrar un error

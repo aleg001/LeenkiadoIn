@@ -193,7 +193,7 @@ export default {
           password: this.password,
           fullname: this.fullname
         }
-
+        console.log(user)
         const res = await axios.post('http://localhost:8000/api/users', user)
         console.log(res.data)
       } catch (err) {

@@ -3,7 +3,6 @@ const driver = require('../neo4jService')
 class UserController {
   static createUser = async (req, res) => {
     const session = driver.session()
-    console.log(req.body)
     try {
       const { email, password, fullname } = req.body
       const result = await session.run(
