@@ -119,9 +119,10 @@ export default {
 
     async login() {
       const resultado = await this.getUser()
-      console.log(resultado)
-      if(resultado !== 0){
-        this.$router.push("/feed");
+      if(resultado.length !== 0){
+        const properties = resultado[0]._fields[0]
+        console.log(properties);
+        this.$router.push({ path: "/feed", query: { properties: JSON.stringify(properties) } });
       }
       else{
         // Mostrar un error
@@ -136,7 +137,7 @@ export default {
           password: this.password,
         }
         const res = await axios.post('http://localhost:8000/api/userslogin', user)
-        return res.data.records.length
+        return res.data.records
       } catch (err) {
         console.error(err)
       }
