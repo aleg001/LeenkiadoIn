@@ -62,6 +62,7 @@
 <script>
 // import
 import { Validation } from '../services/_formValidation.js'
+import axios from 'axios'
 export default {
   components: {
     // LoginForm,
@@ -117,25 +118,10 @@ export default {
     },
 
     async login() {
-      try {
-        // storing inputs value
-        this.userMap.set('email', this.email.val)
-        this.userMap.set('password', this.password.val)
-        // form validation
-        const validation = new Validation(this.userMap)
-        validation.validate()
-        const valResult = validation.result
-        console.log(valResult)
-        this.formIsValid = valResult[1]
-        this.updateValidation(valResult[0])
-
-        if (this.formIsValid) {
-          await this.$store.dispatch('Signin', this.userMap)
-
-          this.$router.replace('/feed')
-        }
-      } catch (error) {
-        console.log(error.message)
+      const resultado = this.getUser()
+      console.log(resultado)
+      if(resultado !== 0){
+        this.$router.push("/Feed");
       }
     },
     updateValidation(inputs) {
@@ -144,6 +130,18 @@ export default {
         this[`${item.key}`].valid.errorMessage = item.errorMessage
       })
     },
+    async getUser() {
+      try {
+        const user = {
+          email: this.email,
+          password: this.password,
+        }
+        const res = await axios.post('http://localhost:8000/api/userslogin', user)
+        return res.data.records.length
+      } catch (err) {
+        console.error(err)
+      }
+    }
   },
   // mounted() {
   //   localStorage.clear();

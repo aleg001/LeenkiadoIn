@@ -16,6 +16,20 @@ class UserController {
       await session.close()
     }
   }
+  
+  static getUser = async (req, res) => {
+    const session = driver.session()
+    try {
+      const { email, password } = req.body
+      const result = await session.run(`MATCH (u:User { email: '${email.val}', password: '${password.val}' }) RETURN u`)
+      res.send(result)
+    } catch (error) {
+      res.status(500).send(error)
+    } finally {
+      await session.close()
+    }
+  }
+
   static getUsers = async (req, res) => {
     const session = driver.session()
     try {
@@ -28,6 +42,7 @@ class UserController {
       await session.close()
     }
   }
+
 }
 
 module.exports = UserController
