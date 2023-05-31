@@ -66,6 +66,10 @@
 
 <script>
 export default {
+  mounted() {
+    const properties = this.$store.state.properties;
+    console.log(properties);
+  },
   data() {
     return {
       dialog: false,

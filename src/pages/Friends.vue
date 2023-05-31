@@ -52,6 +52,10 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
+  mounted() {
+    const properties = this.$store.state.properties;
+    console.log(properties);
+  },
   name: 'FriendComponent',
   data() {
     return {
