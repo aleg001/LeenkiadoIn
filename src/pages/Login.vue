@@ -120,15 +120,9 @@ export default {
     async login() {
       const resultado = this.getUser()
       console.log(resultado)
-      if(resultado !== 0){
+      if(resultado && resultado.length !== 0){
         this.$router.push("/Feed");
       }
-    },
-    updateValidation(inputs) {
-      inputs.forEach((item) => {
-        this[`${item.key}`].valid.isVal = item.isVal
-        this[`${item.key}`].valid.errorMessage = item.errorMessage
-      })
     },
     async getUser() {
       try {
@@ -137,11 +131,17 @@ export default {
           password: this.password,
         }
         const res = await axios.post('http://localhost:8000/api/userslogin', user)
-        return res.data.records.length
+        return res.data.records
       } catch (err) {
         console.error(err)
       }
-    }
+    },
+    updateValidation(inputs) {
+      inputs.forEach((item) => {
+        this[`${item.key}`].valid.isVal = item.isVal
+        this[`${item.key}`].valid.errorMessage = item.errorMessage
+      })
+    },
   },
   // mounted() {
   //   localStorage.clear();
