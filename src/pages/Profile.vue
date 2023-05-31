@@ -6,6 +6,7 @@
         <p class="profile-title">{{ user.title }}</p>
         <p class="profile-location">{{ user.location }}</p>
       </div>
+      <v-btn class="edit-button" @click="dialog = true" outlined>Editar</v-btn>
     </div>
     <div class="profile-connections">
       <h3 class="profile-connections-title">Cuates</h3>
@@ -20,12 +21,55 @@
       </ul>
     </div>
   </div>
+  <v-dialog v-model="dialog" persistent max-width="600px">
+    <v-card>
+      <v-card-title>
+        <span class="headline">Cambia de identidad</span>
+      </v-card-title>
+      <v-card-text>
+        <v-container>
+          <v-row>
+            <v-col cols="12">
+              <v-text-field
+                v-model="editedUser.name"
+                label="Nombre"
+                required
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12">
+              <v-text-field
+                v-model="editedUser.title"
+                label="Titulo"
+                required
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12">
+              <v-text-field
+                v-model="editedUser.location"
+                label="Donde vivís"
+                required
+              ></v-text-field>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="red darken-1" text @click="dialog = false">Cerrar</v-btn>
+        <v-btn color="blue darken-1" text @click="updateProfile"
+          >Actualizar</v-btn
+        >
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
 export default {
   data() {
     return {
+      dialog: false,
+      editedUser: {},
       user: {
         name: 'Alecraft GOMAS',
 
@@ -47,6 +91,17 @@ export default {
         ],
       },
     }
+  },
+  methods: {
+    updateProfile() {
+      this.user.name = this.editedUser.name
+      this.user.title = this.editedUser.title
+      this.user.location = this.editedUser.location
+      this.dialog = false
+    },
+  },
+  created() {
+    this.editedUser = Object.assign({}, this.user)
   },
 }
 </script>
@@ -122,5 +177,13 @@ export default {
 
 .profile-friend-name {
   font-size: 16px;
+}
+
+.edit-button {
+  color: white;
+  background-color: #0e76a8;
+  border-color: #0e76a8;
+  margin-left: auto;
+  text-transform: unset !important;
 }
 </style>

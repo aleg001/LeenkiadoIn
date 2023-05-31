@@ -15,6 +15,7 @@
           class="w-full p-1 mt-[0.5rem] rounded-md border-[1px] border-gray-400"
           type="email"
           id="email"
+          placeholder="Ingresar"
           v-model="email.val"
         />
         <small class="text-orange-600" v-if="!email.valid.isVal">{{
@@ -119,15 +120,17 @@ export default {
 
     async login() {
       const resultado = await this.getUser()
-      if(resultado.length !== 0){
+      if (resultado.length !== 0) {
         const properties = resultado[0]._fields[0]
-        console.log(properties);
-        this.$router.push({ path: "/feed", query: { properties: JSON.stringify(properties) } });
-      }
-      else{
+        console.log(properties)
+        this.$router.push({
+          path: '/feed',
+          query: { properties: JSON.stringify(properties) },
+        })
+      } else {
         // Mostrar un error
-        this.error = { message: "Correo o contraseña incorrectos" };
-        alert("Correo o contraseña incorrectos")
+        this.error = { message: 'Correo o contraseña incorrectos' }
+        alert('Correo o contraseña incorrectos')
       }
     },
     async getUser() {
@@ -136,7 +139,10 @@ export default {
           email: this.email,
           password: this.password,
         }
-        const res = await axios.post('http://localhost:8000/api/userslogin', user)
+        const res = await axios.post(
+          'http://localhost:8000/api/userslogin',
+          user
+        )
         return res.data.records
       } catch (err) {
         console.error(err)
