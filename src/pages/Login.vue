@@ -118,10 +118,15 @@ export default {
     },
 
     async login() {
-      const resultado = this.getUser()
+      const resultado = await this.getUser()
       console.log(resultado)
-      if(resultado && resultado.length !== 0){
+      if(resultado !== 0){
         this.$router.push("/Feed");
+      }
+      else{
+        // Mostrar un error
+        this.error = { message: "Correo o contraseña incorrectos" };
+        alert("Correo o contraseña incorrectos")
       }
     },
     async getUser() {
@@ -131,7 +136,7 @@ export default {
           password: this.password,
         }
         const res = await axios.post('http://localhost:8000/api/userslogin', user)
-        return res.data.records
+        return res.data.records.length
       } catch (err) {
         console.error(err)
       }
