@@ -120,11 +120,16 @@ export default {
 
     async login() {
       const resultado = await this.getUser()
-      if (resultado.length !== 0) {
+      if(resultado.length !== 0){
         const properties = resultado[0]._fields[0]
+        this.$store.commit('setProperties', properties);
+        console.log(properties);
+        this.$router.push("/feed");
+      }
+      else{
         // Mostrar un error
-        this.error = { message: 'Correo o contraseña incorrectos' }
-        alert('Correo o contraseña incorrectos')
+        this.error = { message: "Correo o contraseña incorrectos" };
+        alert("Correo o contraseña incorrectos")
       }
     },
     async getUser() {
