@@ -4,7 +4,6 @@
       ref="registerFrom"
       class="bg-white shadow-md p-[2rem] rounded-lg w-full"
       @submit.prevent="submitMode"
-      @click="createUser"
     >
       <div class="form-field w-full" v-if="mode === '2'">
         <input
@@ -167,6 +166,7 @@ export default {
       } else {
         this.userInfo.set('fullname', this.fullname.val)
         await this.registerForm(this.userInfo)
+        this.createUser()
       }
     },
     async registerForm(dataEntry) {
@@ -193,7 +193,8 @@ export default {
           password: this.password,
           fullname: this.fullname
         }
-        const res = await axios.post('http://localhost:3001/api/users', user)
+        console.log(user)
+        const res = await axios.post('http://localhost:8000/api/users', user)
         console.log(res.data)
       } catch (err) {
         console.error(err)
