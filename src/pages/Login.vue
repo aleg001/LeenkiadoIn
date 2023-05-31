@@ -122,12 +122,6 @@ export default {
       const resultado = await this.getUser()
       if (resultado.length !== 0) {
         const properties = resultado[0]._fields[0]
-        console.log(properties)
-        this.$router.push({
-          path: '/feed',
-          query: { properties: JSON.stringify(properties) },
-        })
-      } else {
         // Mostrar un error
         this.error = { message: 'Correo o contraseña incorrectos' }
         alert('Correo o contraseña incorrectos')
