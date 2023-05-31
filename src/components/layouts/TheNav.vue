@@ -15,7 +15,7 @@
     </nav>
     <div v-if="dialogOpen" class="dialog" @keydown.escape="handleEscapeKey">
       <div class="dialog-header">
-        <h3 style="color:white">Ingresa el nombre:</h3>
+        <h3 style="color: white">Ingresa el nombre:</h3>
         <span class="close-icon" @click="closeDialog">x</span>
       </div>
       <v-card class="vcard">
@@ -151,17 +151,14 @@ export default {
 .search-bar {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
 }
 
 .search-bar input {
   width: 100%;
   padding: 10px;
   border: none;
-  border-radius: 4px;
+
   font-size: 16px;
-  background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .enter-button {
@@ -169,6 +166,7 @@ export default {
   padding: 10px;
   border: none;
   border-radius: 4px;
+
   background-color: #007bff;
   color: white;
   cursor: pointer;
