@@ -6,7 +6,7 @@ class UserController {
     try {
       const { email, password, fullname } = req.body
       const result = await session.run(
-        `CREATE (u:User {fullname: '${fullname.val}', email: '${email.val}', password: '${password.val}' })`
+        `MERGE (u:User {fullname: '${fullname.val}', email: '${email.val}', password: '${password.val}' })`
       )
       res.send(result.records)
     } catch (error) {
@@ -35,6 +35,21 @@ class UserController {
       const result = await session.run('MATCH (u:User) RETURN u')
       const users = result.records.map((record) => record.get('u').properties)
       res.send(users)
+    } catch (error) {
+      res.status(500).send(error)
+    } finally {
+      await session.close()
+    }
+  }
+
+  static editProperties = async (req, res) => {
+    const session = driver.session()
+    try {
+      console.log(req.body)
+      const { fullname, title, location, education, community, communityRole, skills } = req.body
+      const result = await session.run(`MERGE (u:User {fullname: '${fullname}', title: '${title}', location: '${location}',
+      education: '${education}', community: '${community}', communityRole: '${communityRole}', skills: '${skills}' })`)
+      res.send(result)
     } catch (error) {
       res.status(500).send(error)
     } finally {

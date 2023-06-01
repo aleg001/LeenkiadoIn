@@ -162,10 +162,60 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
-  mounted() {
+  created() {
     const properties = this.$store.state.properties;
-    console.log(properties);
+    console.log(properties)
+    if (properties.properties.fullname) {
+      this.user.name = properties.properties.fullname;
+    } else {
+      this.user.name = "No name"
+    }
+
+    if (properties.properties.title) {
+      this.user.title = properties.properties.title;
+    } else {
+      this.user.title = "No title"
+    }
+
+    if (properties.properties.location) {
+      this.user.location = properties.properties.location;
+    } else {
+      this.user.location = "No Location"
+    }
+
+    if (properties.properties.education) {
+      this.user.education = properties.properties.education;
+    } else {
+      this.user.education = "No education"
+    }
+
+    if (properties.properties.community) {
+      this.user.community = properties.properties.community;
+    } else {
+      this.user.community = "No community"
+    }
+
+    if (properties.properties.communityRole) {
+      this.user.communityRole = properties.properties.communityRole;
+    } else {
+      this.user.communityRole = "No community Role"
+    }
+
+    if (properties.properties.skills) {
+      this.user.skills = properties.properties.skills.map((skill, index) => {
+        return {
+          id: index + 1,
+          name: properties.properties.skills[index],
+        };
+      });
+    console.log(this.user.skills)
+    } else {
+      this.user.skills = []
+    }
+
+    this.editedUser = Object.assign({}, this.user);
   },
   data() {
     return {
@@ -174,8 +224,7 @@ export default {
       addSkillDialog: false,
       newSkill: '',
       user: {
-        name: 'Alecraft GOMAS',
-
+        name: 'Ale',
         title: 'Full Stack Dev',
         education: 'UVG',
         location: 'Guaremala Ciri',
@@ -231,17 +280,30 @@ export default {
       this.user.title = this.editedUser.title
       this.user.location = this.editedUser.location
       this.user.education = this.editedUser.education
-      this.user.title = this.editedUser.title
       this.user.skills = this.editedUser.skills
       this.user.community = this.editedUser.community
       this.user.communityRole = this.editedUser.communityRole
 
       this.dialog = false
+      this.updateUser()
     },
-  },
-
-  created() {
-    this.editedUser = Object.assign({}, this.user)
+    async updateUser(){
+      try {
+        const user = {
+          fullname: this.user.name,
+          title: this.user.title,
+          location: this.user.location,
+          education: this.user.education,
+          community: this.user.community,
+          communityRole: this.user.communityRole,
+          skills: this.user.skills,
+        }
+        const res = await axios.post('http://localhost:8000/api/userupdate', user)
+        return res.data.records
+      } catch (err) {
+        console.error(err)
+      }
+    }
   },
 }
 </script>
