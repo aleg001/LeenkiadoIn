@@ -1,34 +1,22 @@
 <template>
   <div class="friend-component">
-    <h2 class="friend-component__title">Cuates</h2>
-    <div class="mt-5 friend-component__search-bar">
-      <input
-        type="text"
-        v-model="searchQuery"
-        placeholder="Buscar cuates..."
-        class="friend-component__search-input"
-      />
-      <button class="friend-component__search-button">Buscar</button>
+    <h2 class="friend-component__title">Unite a una comunidad chilera</h2>
+    <div class="mt-5 friend-component__community-selector">
+      <v-select
+        v-model="selectedCommunity"
+        :items="communities"
+        label="Comunidad"
+        dense
+      ></v-select>
     </div>
-    <ul class="mt-10 friend-component__list">
-      <li
-        v-for="friend in filteredFriends"
-        :key="friend.id"
-        class="friend-component__item"
-      >
-        <div class="friend-component__avatar"></div>
-        <div class="friend-component__name">{{ friend.name }}</div>
-        <div class="friend-component__mutual-connections">
-          {{ friend.mutualConnections }}
-        </div>
-        <button
-          @click="removeFriend(friend.id)"
-          class="friend-component__delete-button"
-        >
-          Eliminar
-        </button>
-      </li>
-    </ul>
+    <div class="mt-3 friend-component__role-input">
+      <v-text-field
+        v-model="role"
+        :label="'Tu rol en ' + selectedCommunity"
+        dense
+      ></v-text-field>
+    </div>
+    <button class="friend-component__search-button">Unite chavo</button>
   </div>
 </template>
 
@@ -36,10 +24,6 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  mounted() {
-    const properties = this.$store.state.properties;
-    console.log(properties);
-  },
   name: 'FriendComponent',
   data() {
     return {
@@ -54,6 +38,9 @@ export default defineComponent({
         { id: 3, name: 'David Johnson', mutualConnections: 1 },
       ],
       searchQuery: '',
+      selectedCommunity: '',
+      role: '',
+      communities: ['Community 1', 'Community 2', 'Community 3'],
     }
   },
   computed: {
@@ -89,6 +76,14 @@ export default defineComponent({
   margin-bottom: 10px;
 }
 
+.friend-component__community-selector {
+  margin-bottom: 10px;
+}
+
+.friend-component__role-input {
+  margin-bottom: 10px;
+}
+
 .friend-component__search-bar {
   display: flex;
   align-items: center;
@@ -108,7 +103,6 @@ export default defineComponent({
 .friend-component__search-button {
   margin-left: 10px;
   padding: 10px;
-  border: none;
   border-radius: 4px;
   background-color: #007bff;
   color: white;

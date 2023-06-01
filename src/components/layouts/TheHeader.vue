@@ -59,7 +59,9 @@ export default {
       if (
         this.$route.path === '/feed' ||
         this.$route.path === '/friends' ||
-        this.$route.path === '/profile'
+        this.$route.path === '/profile' ||
+        this.$route.path === '/agregar-mara' ||
+        this.$route.path === '/comunidades'
       ) {
         return true
       } else {

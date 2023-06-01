@@ -1,8 +1,5 @@
 <template>
   <div class="profile">
-    <v-btn class="edit-button align-right" @click="dialog = true" outlined
-      >Editar</v-btn
-    >
     <div class="mt-5 profile-header">
       <div class="profile-info">
         <h2 class="profile-name">{{ user.name }}</h2>
@@ -163,10 +160,6 @@
 
 <script>
 export default {
-  mounted() {
-    const properties = this.$store.state.properties;
-    console.log(properties);
-  },
   data() {
     return {
       dialog: false,

@@ -63,14 +63,12 @@ export default {
       {
         id: 'Agregar mara',
         Icon: ' bi bi-person-plus',
-        clickHandler: () => {
-          if (dialogOpen.value) {
-            dialogOpen.value = false
-          } else {
-            dialogOpen.value = true
-          }
-        },
         route: '/agregar-mara',
+      },
+      {
+        id: 'Comunidades',
+        Icon: ' bi bi-briefcase',
+        route: '/comunidades',
       },
       { id: 'Perfil', Icon: 'bi bi-person', route: '/profile' },
     ])

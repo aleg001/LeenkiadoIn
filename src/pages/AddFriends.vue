@@ -1,32 +1,28 @@
 <template>
   <div class="friend-component">
-    <h2 class="friend-component__title">Cuates</h2>
-    <div class="mt-5 friend-component__search-bar">
+    <h2 class="friend-component__title">Buscar mara</h2>
+    <div class="friend-component__search-bar mt-5">
       <input
         type="text"
         v-model="searchQuery"
-        placeholder="Buscar cuates..."
+        placeholder="Buscar mara..."
         class="friend-component__search-input"
       />
       <button class="friend-component__search-button">Buscar</button>
     </div>
-    <ul class="mt-10 friend-component__list">
+
+    <ul class="mt-15 friend-component__recommendations">
       <li
-        v-for="friend in filteredFriends"
-        :key="friend.id"
-        class="friend-component__item"
+        v-for="recommendation in recommendations"
+        :key="recommendation.id"
+        class="friend-component__recommendation"
       >
         <div class="friend-component__avatar"></div>
-        <div class="friend-component__name">{{ friend.name }}</div>
+        <div class="friend-component__name">{{ recommendation.name }}</div>
         <div class="friend-component__mutual-connections">
-          {{ friend.mutualConnections }}
+          {{ recommendation.mutualConnections }} en común
         </div>
-        <button
-          @click="removeFriend(friend.id)"
-          class="friend-component__delete-button"
-        >
-          Eliminar
-        </button>
+        <button class="friend-component__agregar-button">Agregar</button>
       </li>
     </ul>
   </div>
@@ -36,10 +32,6 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  mounted() {
-    const properties = this.$store.state.properties;
-    console.log(properties);
-  },
   name: 'FriendComponent',
   data() {
     return {

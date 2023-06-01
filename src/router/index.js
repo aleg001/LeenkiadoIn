@@ -5,6 +5,8 @@ import Login from '../pages/Login.vue'
 import Profile from '../pages/Profile.vue'
 import Home from '../pages/Home.vue'
 import Friends from '../pages/Friends.vue'
+import AddFriends from '../pages/AddFriends.vue'
+import Communities from '../pages/Communities.vue'
 
 const routes = [
   { path: '/', redirect: '/home' },
@@ -15,6 +17,11 @@ const routes = [
   },
   {
     path: '/agregar-mara',
+    component: AddFriends,
+  },
+  {
+    path: '/comunidades',
+    component: Communities,
   },
   { path: '/friends', name: 'friends', component: Friends },
   { path: '/profile', name: 'profile', component: Profile },
