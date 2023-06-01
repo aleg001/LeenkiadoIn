@@ -14,9 +14,6 @@
     <v-card v-for="post in posts" :key="post.id" class="post-card mb-4">
       <v-card-text>
         <div class="post-header">
-          <v-avatar class="post-avatar">
-            <v-img :src="post.authorImage" />
-          </v-avatar>
           <div class="post-author">
             <div class="post-author-name">{{ post.author }}</div>
             <div class="post-timestamp">{{ post.timestamp }}</div>
@@ -57,7 +54,6 @@ export default {
       newPost: {
         id: null,
         author: 'User Name',
-        authorImage: 'https://example.com/user-avatar.jpg',
         timestamp: 'Just now',
         content: '',
         likes: 0,
@@ -68,7 +64,6 @@ export default {
         {
           id: 1,
           author: 'Racsin BARRIOS',
-          authorImage: 'https://example.com/john-doe.jpg',
           timestamp: '2 hours ago',
           content: 'This is the content of the first post.',
           likes: 10,
@@ -78,7 +73,6 @@ export default {
         {
           id: 2,
           author: 'Alecraft GOMAS',
-          authorImage: 'https://example.com/jane-smith.jpg',
           timestamp: '1 day ago',
           content: 'This is the content of the second post.',
           likes: 15,
@@ -88,7 +82,6 @@ export default {
         {
           id: 2,
           author: 'Pedro Arriola',
-          authorImage: 'https://example.com/jane-smith.jpg',
           timestamp: '1 day ago',
           content: 'This is the content of the second post.',
           likes: 15,

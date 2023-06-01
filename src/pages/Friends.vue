@@ -12,7 +12,7 @@
     </div>
     <ul class="mt-10 friend-component__list">
       <li
-        v-for="friend in filteredFriends"
+        v-for="friend in friends_list"
         :key="friend.id"
         class="friend-component__item"
       >
@@ -33,41 +33,43 @@
 </template>
 
 <script>
+import axios from 'axios'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  mounted() {
+  created() {
     const properties = this.$store.state.properties;
-    console.log(properties);
+    this.id = properties.properties.ID
+    this.getFriends()
   },
   name: 'FriendComponent',
   data() {
     return {
-      friends: [
+      friends_list: [
         { id: 1, name: 'John Doe' },
         { id: 2, name: 'Jane Smith' },
         { id: 3, name: 'Alex Johnson' },
       ],
-      recommendations: [
-        { id: 1, name: 'Michael Brown', mutualConnections: 2 },
-        { id: 2, name: 'Sonic Davis', mutualConnections: 5 },
-        { id: 3, name: 'David Johnson', mutualConnections: 1 },
-      ],
       searchQuery: '',
+      id: 1
     }
-  },
-  computed: {
-    filteredFriends() {
-      const query = this.searchQuery.toLowerCase()
-      return this.friends.filter((friend) =>
-        friend.name.toLowerCase().includes(query)
-      )
-    },
   },
   methods: {
     removeFriend(id) {
-      this.friends = this.friends.filter((friend) => friend.id !== id)
+      this.friends_list = this.friends_list.filter((friend) => friend.id !== id)
     },
+    async getFriends(){
+      try {
+        const user = {
+          ID: this.id,
+        }
+        const res = await axios.post('http://localhost:8000/api/getfriends', user)
+        console.log(res.data)
+        this.friends = res.data
+      } catch (err) {
+        console.error(err)
+      }
+    }
   },
 })
 </script>

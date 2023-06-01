@@ -42,11 +42,26 @@ class UserController {
     }
   }
 
+  static getCollege = async (req, res) => {
+    const session = driver.session()
+    try {
+      const { ID } = req.body
+      console.log(ID)
+      const result = await session.run(`MATCH (u:User { ID: $ID })-[:Estudied_at]->(c:College)
+      RETURN collect(c.name)`, {ID})
+      console.log(result)
+      res.send(result)
+    } catch (error) {
+      res.status(500).send(error)
+    } finally {
+      await session.close()
+    }
+  }
+
   static editProperties = async (req, res) => {
     const session = driver.session()
     try {
       const { ID, fullname, title, location, skills } = req.body
-      console.log(skills)
       const result = await session.run(`
       MATCH (u:User { ID: $ID })
       SET u.fullname = $fullname,

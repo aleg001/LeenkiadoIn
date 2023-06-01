@@ -10,7 +10,15 @@
         <p class="profile-location">{{ user.location }}</p>
         <div class="profile-education mt-5">
           <h3 class="profile-education-title">Educación</h3>
-          <p class="profile-education-details">{{ user.education }}</p>
+          <ul class="profile-college-list">
+            <li
+              v-for="college in user.college_list"
+              :key="college"
+              class="profile-skill-item"
+            >
+              <span class="profile-skill-name">{{ college }}</span>
+            </li>
+          </ul>
         </div>
         <div class="profile-work">
           <h3 class="profile-work-title">Trabajo</h3>
@@ -188,12 +196,6 @@ export default {
       this.user.location = "No Location"
     }
 
-    if (properties.properties.education) {
-      this.user.education = properties.properties.education;
-    } else {
-      this.user.education = "No education"
-    }
-
     if (properties.properties.community) {
       this.user.community = properties.properties.community;
     } else {
@@ -218,6 +220,8 @@ export default {
       this.user.skills_list = []
     }
 
+    this.getCollege()
+
     this.editedUser = Object.assign({}, this.user);
   },
   data() {
@@ -238,18 +242,19 @@ export default {
         ],
         skills_list: [
           {
-              id: 1,
-              name: 'JavaScript',
-            },
-            {
-              id: 2,
-              name: 'Vue.js',
-            },
-            {
-              id: 3,
-              name: 'HTML & CSS',
-            },
+            id: 1,
+            name: 'JavaScript',
+          },
+          {
+            id: 2,
+            name: 'Vue.js',
+          },
+          {
+            id: 3,
+            name: 'HTML & CSS',
+          },
         ],
+        college_list: [],
         friends: [
           {
             id: 1,
@@ -312,6 +317,17 @@ export default {
         const properties = res.data.records[0]._fields[0]
         this.$store.commit('setProperties', properties);
         console.log(properties)
+      } catch (err) {
+        console.error(err)
+      }
+    },
+    async getCollege(){
+      try {
+        const user = {
+          ID: this.user.id,
+        }
+        const res = await axios.post('http://localhost:8000/api/getcollege', user)
+        this.user.college_list = res.data.records[0]._fields
       } catch (err) {
         console.error(err)
       }
