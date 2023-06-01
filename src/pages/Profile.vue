@@ -28,7 +28,7 @@
           <h3 class="profile-skills-title">Skills</h3>
           <ul class="profile-skills-list">
             <li
-              v-for="skill in user.skills"
+              v-for="skill in user.skills_list"
               :key="skill.id"
               class="profile-skill-item"
             >
@@ -101,7 +101,7 @@
 
             <v-col cols="12">
               <v-chip
-                v-for="(skill, i) in editedUser.skills"
+                v-for="(skill, i) in editedUser.skills_list"
                 :key="i"
                 close
                 class="ml-1"
@@ -166,7 +166,10 @@ import axios from 'axios';
 export default {
   created() {
     const properties = this.$store.state.properties;
-    console.log(properties)
+
+    this.user.id = properties.properties.ID;
+    console.log(this.user.id)
+
     if (properties.properties.fullname) {
       this.user.name = properties.properties.fullname;
     } else {
@@ -204,15 +207,15 @@ export default {
     }
 
     if (properties.properties.skills) {
-      this.user.skills = properties.properties.skills.map((skill, index) => {
+      this.user.skills = properties.properties.skills
+      this.user.skills_list = properties.properties.skills.map((skill, index) => {
         return {
           id: index + 1,
           name: properties.properties.skills[index],
         };
       });
-    console.log(this.user.skills)
     } else {
-      this.user.skills = []
+      this.user.skills_list = []
     }
 
     this.editedUser = Object.assign({}, this.user);
@@ -224,6 +227,7 @@ export default {
       addSkillDialog: false,
       newSkill: '',
       user: {
+        id: '1',
         name: 'Ale',
         title: 'Full Stack Dev',
         education: 'UVG',
@@ -231,18 +235,20 @@ export default {
         community: 'UVG',
         communityRole: 'Estudiante',
         skills: [
+        ],
+        skills_list: [
           {
-            id: 1,
-            name: 'JavaScript',
-          },
-          {
-            id: 2,
-            name: 'Vue.js',
-          },
-          {
-            id: 3,
-            name: 'HTML & CSS',
-          },
+              id: 1,
+              name: 'JavaScript',
+            },
+            {
+              id: 2,
+              name: 'Vue.js',
+            },
+            {
+              id: 3,
+              name: 'HTML & CSS',
+            },
         ],
         friends: [
           {
@@ -264,15 +270,17 @@ export default {
   methods: {
     addSkill() {
       if (this.newSkill) {
-        this.editedUser.skills.push({
-          id: this.editedUser.skills.length + 1,
+        this.editedUser.skills_list.push({
+          id: this.editedUser.skills_list.length + 1,
           name: this.newSkill,
         })
+        this.editedUser.skills.push(this.newSkill)
         this.newSkill = ''
         this.addSkillDialog = false
       }
     },
     removeSkill(index) {
+      this.editedUser.skills_list.splice(index, 1)
       this.editedUser.skills.splice(index, 1)
     },
     updateProfile() {
@@ -281,6 +289,7 @@ export default {
       this.user.location = this.editedUser.location
       this.user.education = this.editedUser.education
       this.user.skills = this.editedUser.skills
+      this.user.skills_list = this.editedUser.skills_list
       this.user.community = this.editedUser.community
       this.user.communityRole = this.editedUser.communityRole
 
@@ -290,6 +299,7 @@ export default {
     async updateUser(){
       try {
         const user = {
+          ID: this.user.id,
           fullname: this.user.name,
           title: this.user.title,
           location: this.user.location,
@@ -299,7 +309,9 @@ export default {
           skills: this.user.skills,
         }
         const res = await axios.post('http://localhost:8000/api/userupdate', user)
-        return res.data.records
+        const properties = res.data.records[0]._fields[0]
+        this.$store.commit('setProperties', properties);
+        console.log(properties)
       } catch (err) {
         console.error(err)
       }
