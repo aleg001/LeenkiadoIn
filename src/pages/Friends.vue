@@ -1,28 +1,16 @@
 <template>
   <div class="friend-component">
     <h2 class="friend-component__title">Cuates</h2>
-    <div class="mt-5 friend-component__search-bar">
-      <input
-        type="text"
-        v-model="searchQuery"
-        placeholder="Buscar cuates..."
-        class="friend-component__search-input"
-      />
-      <button class="friend-component__search-button">Buscar</button>
-    </div>
-    <ul class="mt-10 friend-component__list">
+    <ul class="mt-5 friend-component__list">
       <li
         v-for="friend in friends_list"
-        :key="friend.id"
+        :key="friend.ID"
         class="friend-component__item"
       >
-        <div class="friend-component__avatar"></div>
-        <div class="friend-component__name">{{ friend.name }}</div>
-        <div class="friend-component__mutual-connections">
-          {{ friend.mutualConnections }}
-        </div>
+        <div class="friend-component__name">{{ friend.fullname }}</div>
+      
         <button
-          @click="removeFriend(friend.id)"
+          @click="removeFriends(friend.ID)"
           class="friend-component__delete-button"
         >
           Eliminar
@@ -45,32 +33,51 @@ export default defineComponent({
   name: 'FriendComponent',
   data() {
     return {
-      friends_list: [
-        { id: 1, name: 'John Doe' },
-        { id: 2, name: 'Jane Smith' },
-        { id: 3, name: 'Alex Johnson' },
-      ],
+      friends_list: [],
+      db_friends_list: [],
       searchQuery: '',
       id: 1
     }
   },
   methods: {
-    removeFriend(id) {
-      this.friends_list = this.friends_list.filter((friend) => friend.id !== id)
-    },
-    async getFriends(){
+    async getFriends() {
       try {
         const user = {
           ID: this.id,
-        }
-        const res = await axios.post('http://localhost:8000/api/getfriends', user)
+        };
+        const res = await axios.post('http://localhost:8000/api/getfriends', user);
         console.log(res.data)
-        this.friends = res.data
+
+        res.data.forEach((entry) => {
+          const friend = {
+            ID: entry._fields[0],
+            fullname: entry._fields[1],
+          };
+          this.friends_list.push(friend);
+          this.db_friends_list.push(friend);
+        });
       } catch (err) {
         console.error(err)
       }
+    },
+    removeFriends(friend_id) {
+    
+        const user = {
+          ID: this.id,
+          friendID: friend_id
+        };
+        axios.post('http://localhost:8000/api/removefriend', user)
+        
+    .then(res => {
+      console.log(res.data);
+      this.friends_list = this.friends_list.filter(friend => friend.ID !== friend_id);
+      
+    })
+    alert('Se ha eliminado a tu cuate')
+    .catch(err => console.error(err));
+},
     }
-  },
+ 
 })
 </script>
 

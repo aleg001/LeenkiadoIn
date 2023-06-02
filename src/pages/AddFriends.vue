@@ -13,52 +13,82 @@
 
     <ul class="mt-15 friend-component__recommendations">
       <li
-        v-for="recommendation in recommendations"
-        :key="recommendation.id"
+        v-for="user in recommendations"
+        :key="user.ID"
         class="friend-component__recommendation"
       >
         <div class="friend-component__avatar"></div>
-        <div class="friend-component__name">{{ recommendation.name }}</div>
-        <div class="friend-component__mutual-connections">
-          {{ recommendation.mutualConnections }} en común
-        </div>
-        <button class="friend-component__agregar-button">Agregar</button>
+        <div class="friend-component__name">{{ user.fullname }}</div>
+        <div class="button-container">
+  <button @click="addUser(user.ID)" class="friend-component__agregar-button">Agregar</button>
+</div>
       </li>
     </ul>
   </div>
+
+  <div v-if="showToast" class="toast">
+      ¡Amigo agregado!
+    </div>
 </template>
 
 <script>
 import { defineComponent } from 'vue'
+import axios from 'axios'
 
 export default defineComponent({
+  created(){
+    const properties = this.$store.state.properties;
+    this.id = properties.properties.ID
+    this.getUsers()
+  },
   name: 'FriendComponent',
   data() {
     return {
-      friends: [
-        { id: 1, name: 'John Doe' },
-        { id: 2, name: 'Jane Smith' },
-        { id: 3, name: 'Alex Johnson' },
-      ],
+      showToast: false,
+      toastMessage: '',
       recommendations: [
-        { id: 1, name: 'Michael Brown', mutualConnections: 2 },
-        { id: 2, name: 'Sonic Davis', mutualConnections: 5 },
-        { id: 3, name: 'David Johnson', mutualConnections: 1 },
       ],
       searchQuery: '',
     }
   },
-  computed: {
-    filteredFriends() {
-      const query = this.searchQuery.toLowerCase()
-      return this.friends.filter((friend) =>
-        friend.name.toLowerCase().includes(query)
-      )
-    },
-  },
   methods: {
-    removeFriend(id) {
-      this.friends = this.friends.filter((friend) => friend.id !== id)
+    addUser(userID){
+      this.addFriend(userID)
+      alert("Amigo agregado")
+
+    },
+    async getUsers() {
+      try {
+        const user = {
+          ID: this.id,
+        };
+        const res = await axios.post('http://localhost:8000/api/getnofriends', user);
+        console.log(res.data)
+
+        res.data.forEach((entry) => {
+          const user = {
+            ID: entry._fields[0],
+            fullname: entry._fields[1],
+          };
+          this.recommendations.push(user);
+        });
+      } catch (err) {
+        console.error(err)
+      }
+    },
+    async addFriend(friend_ID) {
+      try {
+        const user = {
+          ID: this.id,
+          friendID: friend_ID
+        };
+        const res = await axios.post('http://localhost:8000/api/addfriend', user);
+        console.log(res.data)
+        this.showToast = true;
+     
+      } catch (err) {
+        console.error(err)
+      }
     },
   },
 })
@@ -160,7 +190,7 @@ export default defineComponent({
 }
 
 .friend-component__agregar-button {
-  margin-left: 10px;
+
   padding: 8px;
   border: none;
   border-radius: 4px;
@@ -168,4 +198,24 @@ export default defineComponent({
   color: white;
   cursor: pointer;
 }
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+
+}
+.toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #000;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 4px;
+    opacity: 0.9;
+    z-index: 9999;
+  }
 </style>

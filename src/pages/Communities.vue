@@ -1,22 +1,21 @@
 <template>
   <div class="friend-component">
     <h2 class="friend-component__title">Unite a una comunidad chilera</h2>
-    <div class="mt-5 friend-component__community-selector">
-      <v-select
-        v-model="selectedCommunity"
-        :items="communities"
-        label="Comunidad"
-        dense
-      ></v-select>
-    </div>
     <div class="mt-3 friend-component__role-input">
       <v-text-field
-        v-model="role"
-        :label="'Tu rol en ' + selectedCommunity"
-        dense
-      ></v-text-field>
+  v-model="community_name"
+  label="Escribe tu comunidad"
+  dense
+></v-text-field>
+
+<v-text-field
+  v-if="community_name"
+  v-model="role"
+  :label="'Tu rol en ' + community_name"
+  dense
+></v-text-field>
     </div>
-    <button class="friend-component__search-button">Unite chavo</button>
+    <button @click="setCommunity" class="friend-component__search-button">Unite chavo</button>
   </div>
 </template>
 
@@ -27,33 +26,23 @@ export default defineComponent({
   name: 'FriendComponent',
   data() {
     return {
-      friends: [
-        { id: 1, name: 'John Doe' },
-        { id: 2, name: 'Jane Smith' },
-        { id: 3, name: 'Alex Johnson' },
-      ],
-      recommendations: [
-        { id: 1, name: 'Michael Brown', mutualConnections: 2 },
-        { id: 2, name: 'Sonic Davis', mutualConnections: 5 },
-        { id: 3, name: 'David Johnson', mutualConnections: 1 },
-      ],
       searchQuery: '',
-      selectedCommunity: '',
+      community_name: '',
       role: '',
-      communities: ['Community 1', 'Community 2', 'Community 3'],
     }
   },
-  computed: {
-    filteredFriends() {
-      const query = this.searchQuery.toLowerCase()
-      return this.friends.filter((friend) =>
-        friend.name.toLowerCase().includes(query)
-      )
-    },
-  },
   methods: {
-    removeFriend(id) {
-      this.friends = this.friends.filter((friend) => friend.id !== id)
+    async setCommunity() {
+      try {
+        const user = {
+          ID: this.id,
+          name: this.community_name,
+          role: this.role
+        };
+        const res = await axios.post('http://localhost:8000/api/setcommunity', user);
+      } catch (err) {
+        console.error(err)
+      }
     },
   },
 })

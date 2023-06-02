@@ -16,7 +16,7 @@
               :key="college"
               class="profile-skill-item"
             >
-              <span class="profile-skill-name">{{ college }}</span>
+              <span class="profile-skill-name"> {{ Array.isArray(college) ? college.join(', ') : college }}</span>
             </li>
           </ul>
         </div>
@@ -66,13 +66,7 @@
                 required
               ></v-text-field>
             </v-col>
-            <v-col cols="12">
-              <v-text-field
-                v-model="editedUser.education"
-                label="Donde estudiaste"
-                required
-              ></v-text-field>
-            </v-col>
+           
             <v-col cols="12">
               <v-text-field
                 v-model="editedUser.title"
@@ -89,22 +83,7 @@
               ></v-text-field>
             </v-col>
 
-            <v-col cols="12">
-              <v-text-field
-                v-model="editedUser.community"
-                label="Comunidad"
-                required
-              ></v-text-field>
-            </v-col>
-
-            <v-col cols="12">
-              <v-text-field
-                v-model="editedUser.communityRole"
-                label="Rol en la comunidad"
-                required
-              ></v-text-field>
-            </v-col>
-
+            
             <h3 class="profile-work-title">Skills</h3>
 
             <v-col cols="12">
@@ -327,6 +306,7 @@ export default {
           ID: this.user.id,
         }
         const res = await axios.post('http://localhost:8000/api/getcollege', user)
+        console.log(res)
         this.user.college_list = res.data.records[0]._fields
       } catch (err) {
         console.error(err)
