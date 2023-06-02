@@ -166,7 +166,9 @@ export default {
       } else {
         this.userInfo.set('fullname', this.fullname.val)
         await this.registerForm(this.userInfo)
-        this.createUser()
+        const resultado = await this.createUser()
+        const properties = resultado[0]._fields[0]
+        this.$store.commit('setProperties', properties);
       }
     },
     async registerForm(dataEntry) {

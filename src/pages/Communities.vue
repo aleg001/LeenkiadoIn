@@ -9,7 +9,7 @@
 ></v-text-field>
 
 <v-text-field
-  v-if="community_name"
+  v-if="community_name !== ''"
   v-model="role"
   :label="'Tu rol en ' + community_name"
   dense
@@ -21,14 +21,20 @@
 
 <script>
 import { defineComponent } from 'vue'
+import axios from 'axios'
 
 export default defineComponent({
+  created() {
+    const properties = this.$store.state.properties;
+    this.id = properties.properties.ID
+  },
   name: 'FriendComponent',
   data() {
     return {
       searchQuery: '',
       community_name: '',
       role: '',
+      id: 1
     }
   },
   methods: {

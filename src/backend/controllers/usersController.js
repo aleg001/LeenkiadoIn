@@ -6,7 +6,12 @@ class UserController {
     try {
       const { email, password, fullname } = req.body
       const result = await session.run(
-        `MERGE (u:User {fullname: '${fullname.val}', email: '${email.val}', password: '${password.val}' })`
+        `
+        CALL apoc.create.uuids(1) YIELD uuid
+        UNWIND uuid AS id
+        MERGE (u:User {ID: id, fullname: '${fullname.val}', email: '${email.val}', password: '${password.val}' })
+        RETURN u
+        `
       )
       res.send(result.records)
     } catch (error) {

@@ -1,15 +1,7 @@
 <template>
   <div class="friend-component">
     <h2 class="friend-component__title">Buscar mara</h2>
-    <div class="friend-component__search-bar mt-5">
-      <input
-        type="text"
-        v-model="searchQuery"
-        placeholder="Buscar mara..."
-        class="friend-component__search-input"
-      />
-      <button class="friend-component__search-button">Buscar</button>
-    </div>
+   
 
     <ul class="mt-15 friend-component__recommendations">
       <li

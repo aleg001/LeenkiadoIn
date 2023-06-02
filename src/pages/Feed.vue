@@ -1,5 +1,7 @@
 <template>
   <div class="feed justify-center">
+
+    <!-- 
     <div class="post-card">
       <div class="create-post">
         <textarea
@@ -9,7 +11,7 @@
         ></textarea>
       </div>
       <button @click="addPost" class="create-post-btn mt-5">Publicalo</button>
-    </div>
+    </div> -->
 
     <v-card v-for="post in posts" :key="post.id" class="post-card mb-4">
       <v-card-text>
@@ -20,20 +22,6 @@
           </div>
         </div>
         <div class="post-content">{{ post.content }}</div>
-        <div class="post-engagement">
-          <div class="post-engagement-item">
-            <i class="bi bi-hand-thumbs-up post-icon"></i>
-            <span class="post-engagement-count">{{ post.likes }}</span>
-          </div>
-          <div class="post-engagement-item">
-            <i class="bi bi-chat-dots post-icon"></i>
-            <span class="post-engagement-count">{{ post.comments }}</span>
-          </div>
-          <div class="post-engagement-item">
-            <i class="bi bi-share post-icon"></i>
-            <span class="post-engagement-count">{{ post.shares }}</span>
-          </div>
-        </div>
       </v-card-text>
     </v-card>
   </div>
@@ -41,16 +29,20 @@
 
 <script>
 import TheNav from '../components/layouts/TheNav.vue'
+import axios from 'axios'
 export default {
   mounted() {
     const properties = this.$store.state.properties;
+    this.id = properties.properties.ID
     console.log(properties);
+    this.getFriendsPosts();
   },
   data() {
     return {
       dialog: false,
       newPostContent: '',
       TheNav,
+      id: 1,
       newPost: {
         id: null,
         author: 'User Name',
@@ -61,33 +53,7 @@ export default {
         shares: 0,
       },
       posts: [
-        {
-          id: 1,
-          author: 'Racsin BARRIOS',
-          timestamp: '2 hours ago',
-          content: 'This is the content of the first post.',
-          likes: 10,
-          comments: 5,
-          shares: 2,
-        },
-        {
-          id: 2,
-          author: 'Alecraft GOMAS',
-          timestamp: '1 day ago',
-          content: 'This is the content of the second post.',
-          likes: 15,
-          comments: 3,
-          shares: 1,
-        },
-        {
-          id: 2,
-          author: 'Pedro Arriola',
-          timestamp: '1 day ago',
-          content: 'This is the content of the second post.',
-          likes: 15,
-          comments: 3,
-          shares: 1,
-        },
+       
       ],
     }
   },
@@ -97,6 +63,44 @@ export default {
         this.newPost.id = this.posts.length + 1
         this.posts.unshift(Object.assign({}, this.newPost))
         this.newPost.content = ''
+      }
+    },
+    async getFriendsPosts() {
+      try {
+        const user = {
+          ID: this.id,
+        }
+        const response = await axios.post('http://localhost:8000/api/getposts', user)
+        console.log(response)
+
+        console.log(response.data)
+        for(let i=0; i<response.data.length; i++) {
+      let postContent = response.data[i]._fields[0];
+      let postDate = response.data[i]._fields[1];
+      let postAuthor = response.data[i]._fields[2];
+
+      let postToAdd = {
+        id: i,  
+        author: postAuthor, 
+        timestamp: new Date(
+          postDate.year.high, 
+          postDate.month.high - 1,
+          postDate.day.high, 
+          postDate.hour.high,
+          postDate.minute.high, 
+          postDate.second.high
+        ).toString(), 
+        content: postContent,
+        likes: 0, 
+        comments: 0, 
+        shares: 0, 
+      }
+      this.posts.push(postToAdd);
+    }
+
+        
+      } catch (error) {
+        console.error('Error haciendo fetch de los posts', error);
       }
     },
   },
